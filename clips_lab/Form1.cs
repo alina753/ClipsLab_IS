@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using CLIPSNET;
 using System.Speech.Synthesis;
+using System.Globalization;
 
 namespace clips_lab
 {
@@ -39,7 +40,8 @@ namespace clips_lab
 
 
         private CLIPSNET.Environment clips = new CLIPSNET.Environment();
-        private SpeechSynthesizer synth;
+        private static SpeechSynthesizer synth;
+        int volume;
         public Form1()
         {
             InitializeComponent();
@@ -48,12 +50,10 @@ namespace clips_lab
             synth.SetOutputToDefaultAudioDevice();
             var voices = synth.GetInstalledVoices();
             synth.SelectVoice("Microsoft Irina Desktop");
-            synth.Rate = 4;
+            synth.Rate = 5;
+            volume = synth.Volume;
 
             synth.SpeakAsync("Добро пожаловать, юный алхимик! Выбери файл фактов и clips файл с набором правил.");
-            //Rules_completion();
-            //CLIPSfileRules();
-
         }
 
         private async void CLIPSfileFacts()
@@ -82,10 +82,10 @@ namespace clips_lab
                     string f3 = inverseDic_facts[rule.Value[0]].Split('\'')[1];
                     await writer.WriteLineAsync($"(defrule Rule{i} \"\"\n" +
                                                     $"  (declare (salience 20))\n" +
-                                                    $"  (elem (name {f1}))\n  (elem (name {f2}))\n" +
+                                                    $"  (elem (name {f1}) (CF ?c1))\n  (elem (name {f2}) (CF ?c2))\n" +
                                                     $"=>\n" +
                                                     $"  (assert (appendmessage \"{f1} + {f2} = {f3};  \"))\n" +
-                                                    $"  (assert (elem (name {f3})))\n" +
+                                                    $"  (assert (elem (name {f3}) (CF (/ (+ ?c1 ?c2)(- 1 (min ?c1 ?c2))))))\n" +
                                                     $")\n");
                 }
             }
@@ -162,8 +162,11 @@ namespace clips_lab
             clips.Reset();
             foreach (var elem in listBox2_using_facts.Items)
             {
-                clips.Eval("(assert(appendmessage \"Новый элемент " + elem + "\n\" ))");
-                clips.Eval("(assert(elem (name " + elem + ")))");
+                List<string> list = elem.ToString().Split('(').ToList();
+                string name = list[0];
+                double certainty = Convert.ToDouble(list[1].TrimEnd(')'));
+                clips.Eval($"(assert(appendmessage \"Новый элемент { name }\n\" ))");
+                clips.Eval($"(assert(elem (name { name }) (CF { certainty.ToString(CultureInfo.InvariantCulture) })))");
             }
 
             clips.Run();
@@ -184,6 +187,7 @@ namespace clips_lab
 
 
             var facts = clips.FindAllFacts("elem").Select(f => f["name"]).ToList();
+            var certaints = clips.FindAllFacts("elem").Select(f => f["CF"]).ToList();
 
 
             List<string> result_list = new List<string>();
@@ -200,10 +204,12 @@ namespace clips_lab
             //заполнение окна полученных фактов
             for (int i = 0; i < facts.Count; i++)
             {
-                byte[] bytes = Encoding.Default.GetBytes(facts[i].ToString());
-                string elem = Encoding.UTF8.GetString(bytes);
-                this.listBox4_res.Items.Add(elem.TrimStart('(').TrimEnd(')') + "\n");
-                elems_to_say += elem;
+                byte[] f_bytes = Encoding.Default.GetBytes(facts[i].ToString());
+                byte[] c_bytes = Encoding.Default.GetBytes(certaints[i].ToString());
+                string name = Encoding.UTF8.GetString(f_bytes);
+                string certainty = Encoding.UTF8.GetString(c_bytes);
+                this.listBox4_res.Items.Add($"{name.TrimStart('(').TrimEnd(')')} ({Math.Round(Convert.ToDouble(certainty), 2)})\n");
+                elems_to_say += name;
             }
             synth.SpeakAsync("Получены элементы: " + elems_to_say);//озвучка
 
@@ -245,7 +251,22 @@ namespace clips_lab
         private void listBox1_facts_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(!listBox2_using_facts.Items.Contains(listBox1_facts.SelectedItem))
-                listBox2_using_facts.Items.Add(listBox1_facts.SelectedItem);
+            {
+                var window = new DWCertainty();
+
+                string c = "";
+
+                //вытаскиваем данные из диалогового окна через анонимный метод, возникающий перед закрытием
+                window.FormClosing += (sender1, e1) =>
+                {
+                    c = window.certainty.ToString();
+                };
+
+                window.ShowDialog(this);
+
+                listBox2_using_facts.Items.Add(listBox1_facts.SelectedItem + " (" + c + ")");
+            }
+
         }
 
         private void listBox2_using_facts_SelectedIndexChanged(object sender, EventArgs e)
@@ -268,6 +289,8 @@ namespace clips_lab
                     break;
             }
             Facts_completion(facts_file_name);
+            Rules_completion();
+            CLIPSfileRules();
 
             synth.SpeakAsync("Факты выбраны, теперь правила");
 
@@ -294,6 +317,12 @@ namespace clips_lab
             listBox2_using_facts.Items.Clear();
             listBox3_rules.Items.Clear();
             listBox4_res.Items.Clear();
+        }
+
+        
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            synth.Volume = (synth.Volume > 0) ? synth.Volume = 0 : synth.Volume = volume;
         }
     }
 }

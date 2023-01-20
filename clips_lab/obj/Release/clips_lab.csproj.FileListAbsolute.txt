@@ -1,0 +1,15 @@
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\bin\Release\clips_lab.exe.config
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\bin\Release\clips_lab.exe
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\bin\Release\clips_lab.pdb
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\bin\Release\CLIPSCLRWrapper.dll
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\bin\Release\Microsoft.Speech.dll
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.csproj.AssemblyReference.cache
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.csproj.SuggestedBindingRedirects.cache
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.DialogWindow.resources
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.Form1.resources
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.Properties.Resources.resources
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.csproj.GenerateResource.cache
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.csproj.CoreCompileInputs.cache
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.csproj.CopyComplete
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.exe
+C:\Users\79381\Desktop\sfedu\7_семестр\ИС\clips_lab\ClipsLab_IS\clips_lab\obj\Release\clips_lab.pdb
